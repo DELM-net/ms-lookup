@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+
+<title>Manuscript Linking Service (mslink)</title>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500" />
+
+<style>
+
+body {
+	font-family: 'Open Sans', sans-serif;
+	font-size: 1.2em;
+}
+h1, .display-6 {
+	font-size: 2em;
+}
+h2 {
+	font-size: 1.5em;
+}
+a, a:visited {
+	color:  #2874a6;
+}	
+
+</style>
+
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+
+<h1><a class="text-reset text-decoration-none" href="?">Manuscript Linking Service (mslink)</a></h1>
+
+<script>
+
+// Function to fetch and parse CSV data
+async function fetchAndParseCSV(url) {
+    try {
+        // Fetch the CSV file
+        const response = await fetch(url);
+
+        // Check if the request was successful
+        if (!response.ok) {
+            throw new Error('Failed to fetch CSV');
+        }
+
+        // Read the response body as text
+        const csvText = await response.text();
+
+        // Parse the CSV text
+        const data = parseCSV(csvText);
+
+        // Return the parsed data
+        return data;
+    } catch (error) {
+        console.error('Error fetching CSV:', error);
+        return null;
+    }
+}
+
+// Function to parse CSV text
+function parseCSV(csvText) {
+    // Split the CSV text into an array of lines
+    const lines = csvText.split('\n');
+
+    // Initialize an array to store the parsed data
+    const data = [];
+
+    // Iterate over each line
+    lines.forEach(line => {
+        // Split the line into an array of values
+        const values = line.split(',');
+
+        // Add the values to the data array
+        data.push(values);
+    });
+
+    // Return the parsed data
+    return data;
+}
+
+// Example usage
+const csvUrl = 'https://raw.githubusercontent.com/DELM-net/mslink/main/datasets/mira.csv';
+fetchAndParseCSV(csvUrl)
+    .then(data => {
+        // Do something with the parsed data
+        console.log(data);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+
+
+
+</script>
+
+
+
+</div>
+
+</body>
+</html>
