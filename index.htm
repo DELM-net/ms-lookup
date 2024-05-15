@@ -6,7 +6,7 @@
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
 
-<title>Manuscript Linking Service (mslink)</title>
+<title>Manuscript Look-up Service (ms-lookup)</title>
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500" />
 
@@ -28,77 +28,74 @@ a, a:visited {
 
 </style>
 
-</head>
-<body class="bg-light">
-
-<div class="container mt-5">
-
-<h1><a class="text-reset text-decoration-none" href="?">Manuscript Linking Service (mslink)</a></h1>
-
 <script>
 
-// Function to fetch and parse CSV data
+// Function to fetch the CSV file and process it
 async function fetchAndParseCSV(url) {
     try {
         // Fetch the CSV file
         const response = await fetch(url);
 
-        // Check if the request was successful
+        // Check if the response is ok (status code 200)
         if (!response.ok) {
-            throw new Error('Failed to fetch CSV');
+            throw new Error(`Failed to fetch CSV: ${response.statusText}`);
         }
 
-        // Read the response body as text
+        // Get the text content of the response
         const csvText = await response.text();
 
         // Parse the CSV text
-        const data = parseCSV(csvText);
+        const rows = csvText.split('\n').map(row => row.split(','));
 
-        // Return the parsed data
-        return data;
+        // Print the parsed CSV data to the console (you can process it further)
+        console.log(rows);
     } catch (error) {
-        console.error('Error fetching CSV:', error);
-        return null;
+        console.error('Error fetching and parsing CSV:', error);
     }
 }
 
-// Function to parse CSV text
-function parseCSV(csvText) {
-    // Split the CSV text into an array of lines
-    const lines = csvText.split('\n');
+// Call the function to fetch and parse the CSV file
+fetchAndParseCSV('https://raw.githubusercontent.com/DELM-net/ms-lookup/main/metadata/ms-catalogues.csv');
 
-    // Initialize an array to store the parsed data
-    const data = [];
+</script>    
 
-    // Iterate over each line
-    lines.forEach(line => {
-        // Split the line into an array of values
-        const values = line.split(',');
+</head>
+<body class="bg-light">
 
-        // Add the values to the data array
-        data.push(values);
-    });
+<div class="container mt-5">
 
-    // Return the parsed data
-    return data;
-}
+<h1><a class="text-reset text-decoration-none" href="?">Manuscript Look-up Service (ms-lookup)</a></h1>
 
-// Example usage
-const csvUrl = 'https://raw.githubusercontent.com/DELM-net/mslink/main/datasets/mira.csv';
-fetchAndParseCSV(csvUrl)
-    .then(data => {
-        // Do something with the parsed data
-        console.log(data);
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
+<p>Data source: <a href="https://github.com/DELM-net/ms-lookup/">https://github.com/DELM-net/ms-lookup/</a></p>
+
+<p>Select a catalogue and supply a reference number. (Do not include any volume)  </p>
+
+<form method="get">
+	<div class="row p-1">
+		<div class="col-sm-2"><label for="formCat" class="form-label">Catalogue</label></div>
+		<div class="col-sm-6">
+			<select name="cat" id="formCat" class="form-select">
+                
+<option value="cla" selected>CLA [E. A. Lowe, Codices Latini Antiquiores, 12 vols (Oxford, 1934–1971)]</option>
+<option value="bkat">Bischoff, Kat. [B. Bischoff, Katalog der festländischen Handschriften des neunten Jahrhunderts, 3 vols (Wiesbaden, 1998–2014)]</option>
+
+            </select>
+		</div>
+	</div>
+	<div class="row p-1">
+		<div class="col-sm-2"><label for="formIdent" class="form-label">Identifier</label></div>
+		<div class="col-sm-6"><input class="form-control" type="text" name="id" id="formIdent" value="7.848" /></div>
+	</div>
+	<div class="row p-1">
+		<div class="col-sm-2"></div>
+		<div class="col-sm-6"><button type="submit" class="btn btn-primary">Search</button></div>
+	</div>
+</form>
 
 
+<script>
 
 </script>
-
-
 
 </div>
 
