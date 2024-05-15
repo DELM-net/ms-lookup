@@ -9,7 +9,7 @@ This service allows you to search for online resources for a specific medieval m
 
 Catalogues:
 
-- E. A. Lowe, _Codices Latini Antiquiores_, 12 vols, (Oxford, 1934–1971)
+- E. A. Lowe, _Codices Latini Antiquiores_, 12 vols (Oxford, 1934–1971)
 - B. Bischoff, _Katalog der festländischen Handschriften des neunten Jahrhunderts_, 3 vols (Wiesbaden, 1998–2014)
 
 Linked resources:
@@ -28,7 +28,7 @@ http://www.mira.ie/ms-lookup
 
 To add links to your manuscript project, contact padraic.moran@universityofgalway.ie. 
 
-Data can be supplied in a simple CSV file, with columns for catalogue code (currently "cla" or "bkat"), manuscript identifier, and associated project URL. See examples in the Data folder above.
+Data can be supplied in a simple CSV file, with columns for catalogue code (currently "cla" or "bkat"), reference number, and associated project URL. See examples in the Data folder above.
 
 ---
 Developed by Pádraic Moran, University of Galway. 
