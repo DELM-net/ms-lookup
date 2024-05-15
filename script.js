@@ -1,30 +1,39 @@
 // Function to fetch and load catalogue options
 async function loadCatalogues() {
-   const response = await fetch('https://raw.githubusercontent.com/DELM-net/ms-lookup/main/metadata/ms-catalogues.csv');
-   const data = await response.text();
-   const lines = data.split('\n');
-   const select = document.getElementById('catalogueSelect');
-   lines.forEach(line => {
-     const [code, shortTitle, longTitle] = parseCSVLine(line);
-     const option = document.createElement('option');
-     option.value = code;
-     option.textContent = shortTitle;
-     select.appendChild(option);
-   });
+   try {
+     const response = await fetch('https://raw.githubusercontent.com/DELM-net/ms-lookup/main/metadata/ms-catalogues.csv');
+     const data = await response.text();
+     const lines = data.split('\n');
+     const select = document.getElementById('catalogueSelect');
+     lines.forEach(line => {
+       const [code, shortTitle, longTitle] = parseCSVLine(line);
+       const option = document.createElement('option');
+       option.value = code;
+       option.textContent = shortTitle;
+       select.appendChild(option);
+     });
+   } catch (error) {
+     console.error('Error loading catalogues:', error);
+   }
  }
  
  // Function to load the resources based on user input
  async function loadResource() {
-   const catalogueCode = document.getElementById('catalogueSelect').value;
-   const resourceName = document.getElementById('textInput').value;
-   const resourceLocation = `https://raw.githubusercontent.com/DELM-net/ms-lookup/main/data/${catalogueCode}/${resourceName}.csv`;
+   try {
+     const catalogueCode = document.getElementById('catalogueSelect').value;
+     const resourceName = document.getElementById('textInput').value;
+     const resourceLocation = `https://raw.githubusercontent.com/DELM-net/ms-lookup/main/data/${catalogueCode}/${resourceName}.csv`;
  
-   const response = await fetch(resourceLocation);
-   if (response.ok) {
+     const response = await fetch(resourceLocation);
+     if (!response.ok) {
+       throw new Error('Resource not found.');
+     }
+ 
      const resourceData = await response.text();
      displayResources(resourceData);
-   } else {
-     alert('Resource not found.');
+   } catch (error) {
+     console.error('Error loading resource:', error);
+     alert(error.message);
    }
  }
  
@@ -49,6 +58,7 @@ async function loadCatalogues() {
  
  // Function to parse and display resources in the table
  function displayResources(data) {
+   console.log('Resource data:', data);
    const rows = data.split('\n');
    const tableBody = document.querySelector('#resourceTable tbody');
    tableBody.innerHTML = ''; // Clear previous rows
