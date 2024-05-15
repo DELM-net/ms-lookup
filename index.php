@@ -84,7 +84,7 @@ body {
 	font-size: 1.2em;
 }
 h1, .display-6 {
-s	font-size: 2em;
+	font-size: 2em;
 }
 h2 {
 	font-size: 1.5em;
