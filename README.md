@@ -26,7 +26,7 @@ http://www.mira.ie/ms-lookup
 ---
 ### Participate 
 
-To add links to your manuscript project, contact padraic.moran@universityofgalway.ie. 
+To add links to your manuscript resource, contact padraic.moran@universityofgalway.ie. 
 
 Data can be supplied in a simple CSV file, with columns for catalogue code (currently "cla" or "bkat"), reference number, and associated project URL. See examples in the Data folder above.
 
