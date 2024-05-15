@@ -1,3 +1,5 @@
+
+
 // Function to fetch and load catalogue options
 async function loadCatalogues() {
    try {
@@ -18,7 +20,7 @@ async function loadCatalogues() {
  }
  
  // Function to load the resources based on user input
- async function loadResource() {
+async function loadResource() {
    try {
      const catalogueCode = document.getElementById('catalogueSelect').value;
      const resourceName = document.getElementById('textInput').value;
@@ -30,13 +32,14 @@ async function loadCatalogues() {
      }
  
      const resourceData = await response.text();
-     displayResources(resourceData);
+     console.log('Resource data:', resourceData); // Log resource data
+     document.getElementById('resourceTable').innerHTML = resourceData; // Directly display resource data
    } catch (error) {
      console.error('Error loading resource:', error);
      alert(error.message);
    }
  }
- 
+   
  // Function to parse CSV line and handle quotes
  function parseCSVLine(line) {
    const values = [];
@@ -57,20 +60,23 @@ async function loadCatalogues() {
  }
  
  // Function to parse and display resources in the table
- function displayResources(data) {
+function displayResources(data) {
    console.log('Resource data:', data);
    const rows = data.split('\n');
    const tableBody = document.querySelector('#resourceTable tbody');
    tableBody.innerHTML = ''; // Clear previous rows
  
    rows.forEach(row => {
+     console.log('Row:', row);
      const [fileName, description, link] = parseCSVLine(row);
+     console.log('Parsed values:', fileName, description, link);
      const escapedDescription = description.replace(/\"/g, ''); // Remove quotes from description
      const escapedLink = link.replace(/\"/g, ''); // Remove quotes from link
      const newRow = `<tr><td>${escapedDescription}</td><td><a href="${escapedLink}" target="_blank">${escapedLink}</a></td></tr>`;
      tableBody.insertAdjacentHTML('beforeend', newRow);
    });
  }
+ 
  
  // Load catalogues when the page loads
  window.onload = loadCatalogues;

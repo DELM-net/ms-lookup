@@ -1,27 +1,39 @@
-# Manuscript Links Service (mslink)
-## Linking online data for medieval manuscripts
+# Manuscript Look-up Service (ms-lookup)
 
-This resource allows you to search for a manuscript, using a canonical identifer (i.e. a reference to an authoritative catalogue), and to find links to online resources for that manuscript.
+_(Formerly ms-link)_
 
-The service is currently accessible at this address:
-http://www.mira.ie/mslink
+This service allows you to search for online resources for a specific medieval manuscript, by reference to its number in a catalogue.
 
-Manuscript projects currently linked are:
+---
+### Current resources
 
-- Earlier Latin Manuscripts | https://elmss.nuigalway.ie/
-- Foundations of Irish Culture | https://www.foundationsirishculture.ie/
-- Manuscripts with Irish Associations | http://www.mira.ie
-
-Links are based on identifiers (references) in the following manuscript catalogues:
+Catalogues:
 
 - E. A. Lowe, _Codices Latini Antiquiores_, 12 vols, (Oxford, 1934–1971)
 - B. Bischoff, _Katalog der festländischen Handschriften des neunten Jahrhunderts_, 3 vols (Wiesbaden, 1998–2014)
 
-You may freely copy the files to any other online location.
+Linked resources:
 
-Developed by Pádraic Moran (http://www.pmoran.ie), University of Galway. 
+- Earlier Latin Manuscripts (https://elmss.nuigalway.ie/)
+- Foundations of Irish Culture (https://www.foundationsirishculture.ie/)
+- Manuscripts with Irish Associations (http://www.mira.ie)
 
-To add links to your manuscript project, contact padraic.moran@universityofgalway.ie. Data can be supplied in a simple CSV file, with columns for catalogue code (currently "cla" or "bkat"), manuscript identifier and associated project URL.
+---
+### Live prototype
+
+http://www.mira.ie/ms-lookup
+
+---
+### Participate 
+
+To add links to your manuscript project, contact padraic.moran@universityofgalway.ie. 
+
+Data can be supplied in a simple CSV file, with columns for catalogue code (currently "cla" or "bkat"), manuscript identifier, and associated project URL. See examples in the Data folder above.
+
+---
+Developed by Pádraic Moran, University of Galway. 
+
+
 
 
 
