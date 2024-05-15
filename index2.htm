@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Manuscript Look-up Service</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500" />
+
+<style>
+
+body {
+	font-family: 'Open Sans', sans-serif;
+	font-size: 1.2em;
+}
+h1, .display-6 {
+	font-size: 2em;
+}
+h2 {
+	font-size: 1.5em;
+}
+a, a:visited {
+	color:  #2874a6;
+}	
+
+</style>
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <h1>Manuscript Look-up Service</h1>
+
+<!-- ChatGPT code below -->
+
+
+<form id="catalogueForm">
+  <label for="catalogueSelect">Select Catalogue:</label>
+  <select id="catalogueSelect" name="catalogueSelect">
+    <!-- Options will be populated dynamically using JavaScript -->
+  </select>
+  <br>
+  <label for="textInput">Enter Resource Name:</label>
+  <input type="text" id="textInput" name="textInput">
+  <br>
+  <button type="button" onclick="loadResource()">Load Resource</button>
+</form>
+
+<h2>Resources:</h2>
+<table id="resourceTable">
+  <thead>
+    <tr>
+      <th>Description</th>
+      <th>Link</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- Table rows will be populated dynamically using JavaScript -->
+  </tbody>
+</table>
+
+<script src="script.js"></script>
+
+
+<!-- ChatGPT code ends -->
+<!--
+
+URLs:
+https://raw.githubusercontent.com/DELM-net/ms-lookup/main/metadata/ms-catalogues.csv
+https://raw.githubusercontent.com/DELM-net/ms-lookup/main/metadata/linked-resources.csv
+
+
+-->
+
+
+    </div>
+</body>
+</html>
