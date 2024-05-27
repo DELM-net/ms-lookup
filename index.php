@@ -14,12 +14,15 @@ $id = cleanInput('id');
 $out = cleanInput('out');
 if ($out != 'xml' && $out != 'json') $out = 'html';
 
+# $baseURL = 'https://raw.githubusercontent.com/DELM-net/ms-lookup/main/';
+$baseURL = ''; # will ideally access GitHub data directly, but that is blocked on the current server
+
 // load catalogue list
-$catalogues = loadCSV("metadata/ms-catalogues.csv", false);
+$catalogues = loadCSV($baseURL . "metadata/ms-catalogues.csv", false);
 if (is_null($catalogues)) $page = 'error';
 
 // load index of datasets
-$datasets = loadCSV("metadata/linked-resources.csv", false); 
+$datasets = loadCSV($baseURL . "metadata/linked-resources.csv", false); 
 if (is_null($datasets)) $page = 'error';
 else ksort($datasets);
 
@@ -33,8 +36,11 @@ if ($cat <> '' & $id <> '') {
 		if (! is_null($data)) {
 			// check each line
 			foreach ($data as $line) {
+				// tidy source data for comparison: strip non-numeric characters
+				$dataRef = preg_replace('/\D/', '',	$line[1]);
+
 				// save details to results array if matching
-				if ($line[0] == $cat && str_contains($line[1], $id)) {
+				if ($line[0] == $cat && $dataRef == $id) {
 					$results[] = array(
 						'ref' => $line[0] . ' ' . $line[1], 
 						'dataset' => $dataset[1], 
@@ -84,7 +90,7 @@ body {
 	font-size: 1.2em;
 }
 h1, .display-6 {
-	font-size: 2em;
+s	font-size: 2em;
 }
 h2 {
 	font-size: 1.5em;
