@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+
+<title>Manuscript Look-up Service</title>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500" />
+
+<style>
+
+body {
+	font-family: 'Open Sans', sans-serif;
+	font-size: 1.2em;
+}
+h1, .display-6 {
+	font-size: 2em;
+}
+h2 {
+	font-size: 1.5em;
+}
+a, a:visited {
+	color:  #2874a6;
+}	
+
+</style>
+
+</head>
+<body class="bg-light">
+
+  <div class="container mt-5">
+
+    <h1>Manuscript Look-up Service</h1>
+    
+    <p class="mb-5 small"><a href="https://github.com/DELM-net/ms-lookup/">https://github.com/DELM-net/ms-lookup/</a></p>
+
+    <!-- Search form -->
+    <form id="dataForm">
+      <div class="row p-1">
+        <div class="col-sm-2"><label for="formCat" class="form-label">Catalogue</label></div>
+        <div class="col-sm-6">
+        <select name="cat" id="formCat" class="form-select" required>
+        <!-- Options will be loaded dynamically from CSV -->
+        </select>
+        </div>
+      </div>
+
+      <div class="row p-1">
+        <div class="col-sm-2"><label for="formIdent" class="form-label">Identifier</label></div>
+        <div class="col-sm-6"><input class="form-control" type="text" name="id" id="formIdent" placeholder="Enter a reference number (without any volume number)" value="" /></div>
+      </div>
+
+      <div class="row p-1">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-6"><button type="submit" class="btn btn-primary">Search for links</button></div>
+      </div>
+    </form>
+
+    <div id="resultsHeading"></div>
+    <table class="table" id="combinedResultsTable" aria-live="polite">
+      <!-- Table content will be populated dynamically -->
+    </table>
+
+    <!-- Manuscript catalogues section -->
+    <h2 class="mt-5 h4 pt-3">Manuscript catalogues</h2>
+    <table class="table" id="cataloguesTable">
+      <!-- Table content will be populated dynamically -->
+    </table>
+
+    <!-- Linked resources section -->
+    <h2 class="mt-5 h4 pt-3">Linked resources</h2>
+    <table class="table" id="linkedResourcesTable">
+      <!-- Table content will be populated dynamically -->
+    </table>
+
+    <script>
+      // Populates the form's catalogue chooser
+      async function populateDropdown(url) {
+        const csv = await fetchCSV(url);
+        if (!csv) return;
+        const data = parseCSV(csv);
+        const dropdown = document.getElementById('formCat');
+        data.forEach(row => {
+          const option = document.createElement('option');
+          option.value = row[0];
+          option.textContent = row[1];
+          dropdown.appendChild(option);
+        });
+      }
+
+      // Get CSV from an external file
+      async function fetchCSV(url) {
+        try {
+          const response = await fetch(url);
+          if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+          const data = await response.text();
+          return data;
+        } catch (error) {
+          console.error(`Could not fetch the CSV from ${url}:`, error);
+          return null;
+        }
+      }
+
+      // Convert CSV raw data to array, handling quoted fields and escaped commas
+      function parseCSV(csv) {
+        const rows = csv.trim().split('\n');
+        return rows.map(row => {
+          const result = [];
+          let insideQuotes = false;
+          let currentField = '';
+
+          for (let i = 0; i < row.length; i++) {
+            const char = row[i];
+
+            if (char === '"') {
+              // Toggle the insideQuotes flag when encountering a double-quote
+              insideQuotes = !insideQuotes;
+            } else if (char === ',' && !insideQuotes) {
+              // If it's a comma and we're not inside quotes, push the current field
+              result.push(currentField.trim());
+              currentField = '';
+            } else {
+              // Add the character to the current field
+              currentField += char;
+            }
+          }
+
+          // Push the last field
+          result.push(currentField.trim());
+
+          // Handle fields with quotes by removing surrounding quotes
+          return result.map(field => field.replace(/^"|"$/g, ''));
+        });
+      }
+
+      // Fetch and display manuscript catalogues, skipping the first column
+      async function displayManuscriptCatalogues() {
+        const url = 'https://raw.githubusercontent.com/DELM-net/ms-lookup/main/metadata/ms-catalogues.csv';
+        const csv = await fetchCSV(url);
+        if (!csv) {
+          console.log('Failed to fetch manuscript catalogues CSV.');
+          return;
+        }
+
+        const data = parseCSV(csv).map(row => row.slice(0)); 
+        console.log('Parsed manuscript catalogues data:', data); // Debugging log
+        displayTable('cataloguesTable', data, ['Code', 'Short form', 'Full reference']);
+      }
+
+      // Fetch and display linked resources, skipping the first column
+      async function displayLinkedResources() {
+        const url = 'https://raw.githubusercontent.com/DELM-net/ms-lookup/main/metadata/linked-resources.csv';
+        const csv = await fetchCSV(url);
+        if (!csv) {
+          console.log('Failed to fetch linked resources CSV.');
+          return;
+        }
+
+        const data = parseCSV(csv).map(row => row.slice(1)); // Skip the first column
+        console.log('Parsed linked resources data:', data); // Debugging log
+        displayTable('linkedResourcesTable', data, ['Resource Name', 'Resource URL']);
+      }
+
+      // Display table function
+      function displayTable(tableId, data, headers) {
+        const table = document.getElementById(tableId);
+        table.innerHTML = ''; // Clear any existing content
+
+        if (data.length === 0) {
+          const noDataRow = document.createElement('tr');
+          const noDataCell = document.createElement('td');
+          noDataCell.textContent = 'No data available.';
+          noDataCell.colSpan = headers.length;
+          noDataRow.appendChild(noDataCell);
+          table.appendChild(noDataRow);
+          return;
+        }
+
+        // Add header row
+        const headerRow = document.createElement('tr');
+        headers.forEach(header => {
+          const th = document.createElement('th');
+          th.textContent = header;
+          headerRow.appendChild(th);
+        });
+        table.appendChild(headerRow);
+
+        // Add data rows
+        data.forEach(row => {
+          const tr = document.createElement('tr');
+          row.forEach(cellData => {
+            const td = document.createElement('td');
+            td.textContent = cellData;
+            tr.appendChild(td);
+          });
+          table.appendChild(tr);
+        });
+      }
+
+      // Prepare search results
+      async function submitForm(event) {
+        event.preventDefault();
+        const selectedOption = document.getElementById('formCat').value;
+        const enteredText = document.getElementById('formIdent').value;
+
+        const csvFiles = await fetchCSV('https://raw.githubusercontent.com/DELM-net/ms-lookup/main/metadata/linked-resources.csv');
+        if (!csvFiles) return;
+
+        const csvFilesData = parseCSV(csvFiles);
+        const csvPromises = csvFilesData.map(async ([csvFileName, descriptiveName]) => {
+          const csvFileData = await fetchCSV(`https://raw.githubusercontent.com/DELM-net/ms-lookup/main/data/${csvFileName}`);
+          if (!csvFileData) return [];
+          const data = parseCSV(csvFileData);
+
+          // Filter results
+          const filteredData = data.filter(row => {
+            const dataRef = row[1].replace(/\D/g, ''); // Remove non-numeric characters from row[1]
+            return row[0] === selectedOption && dataRef === enteredText;
+          });
+
+          // Add the descriptive name to each result
+          return filteredData.map(row => [...row, descriptiveName]); // Add descriptive name to the row
+        });
+
+        const results = await Promise.all(csvPromises);
+        const combinedResults = results.flat();
+
+        displayCombinedResults(combinedResults);
+      }
+
+      // Present search results
+      function displayCombinedResults(results) {
+        const resultsHeading = document.getElementById('resultsHeading');
+        resultsHeading.innerHTML = '<h2 class="mt-5 mb-3">Search results</h2>';
+
+        const table = document.getElementById('combinedResultsTable');
+        table.innerHTML = ''; // Clear previous content
+
+        if (results.length === 0) {
+          const noResultsRow = document.createElement('tr');
+          const noResultsCell = document.createElement('td');
+          noResultsCell.textContent = 'No results found.';
+          noResultsCell.colSpan = 4;
+          noResultsRow.appendChild(noResultsCell);
+          table.appendChild(noResultsRow);
+          return;
+        }
+
+        // Add header row with an extra column for descriptive name
+        const headerRow = document.createElement('tr');
+        headerRow.innerHTML = `
+          <th>Catalogue</th>
+          <th>Identifier</th>
+          <th>Link</th>
+          <th>Resource Name</th>
+        `;
+        table.appendChild(headerRow);
+
+        results.forEach(result => {
+          const row = document.createElement('tr');
+          result.forEach((cellData, j) => {
+            const cell = document.createElement('td');
+            if (j === 2) { // For the link
+              const link = document.createElement('a');
+              link.href = cellData;
+              link.textContent = cellData;
+              link.target = "_blank";
+              cell.appendChild(link);
+            } else {
+              cell.textContent = cellData;
+            }
+            row.appendChild(cell);
+          });
+          table.appendChild(row);
+        });
+      }
+
+      // Initialize page
+      window.onload = function() {
+        populateDropdown('https://raw.githubusercontent.com/DELM-net/ms-lookup/main/metadata/ms-catalogues.csv');
+        displayManuscriptCatalogues();
+        displayLinkedResources();
+      };
+
+      document.getElementById('dataForm').addEventListener('submit', submitForm);
+
+    </script>
+  </div>
+</body>
+</html>
