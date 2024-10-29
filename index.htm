@@ -165,7 +165,7 @@ th, td {
 
         const data = parseCSV(csv).map(row => row.slice(1)); // Skip the first column
         console.log('Parsed linked resources data:', data); // Debugging log
-        displayTable('linkedResourcesTable', data, ['Resource Name', 'Resource URL']);
+        displayTable('linkedResourcesTable', data, ['Resource Name', 'Resource URL', 'Records']);
       }
 
       // Display table function
