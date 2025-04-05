@@ -1,6 +1,7 @@
 File name,Resource name,Resource URL,Records
 bibliotheca-legum.csv,Bibliotheca Legum,http://www.leges.uni-koeln.de,256
 capitularia.csv,Capitularia,https://capitularia.uni-koeln.de/,115
+citca.csv,"Computus in the Carolingian Age",https://computus.huma-num.fr/,53
 clavis-canonum.csv,"Clavis Canonum – Selected Canon Law Collections, ca. 500–1234",https://data.mgh.de/databases/clavis/wiki/,109
 dhbm.csv,"Descriptive Handlist of Breton Manuscripts, c. AD 780–1100",https://ircabritt.nuigalway.ie/handlist/,140
 elmss.csv,Earlier Latin Manuscripts,https://elmss.nuigalway.ie/,2047

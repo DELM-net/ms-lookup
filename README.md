@@ -17,6 +17,7 @@ Linked resources (list in metadata/linked-resources.csv; individual datasets in 
 - Bibliotheca Legum, http://www.leges.uni-koeln.de
 - Capitularia, https://capitularia.uni-koeln.de/
 - Clavis Canonum – Selected Canon Law Collections, ca. 500–1234, https://data.mgh.de/databases/clavis/wiki/
+- Computus in the Carolingian Age, https://computus.huma-num.fr/
 - Descriptive Handlist of Breton Manuscripts, c. AD 780–1100, https://ircabritt.nuigalway.ie/handlist/
 - Earlier Latin Manuscripts, https://elmss.nuigalway.ie
 - Foundations of Irish Culture, https://www.foundationsirishculture.ie/
